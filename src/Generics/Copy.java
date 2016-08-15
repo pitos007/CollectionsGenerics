@@ -7,14 +7,13 @@ package Generics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  *
  * @author UPatryk
  */
-public class Test {
+public class Copy {
     public static void main(String[] args) {
         //List<Number> nums = Arrays.asList(1, 2);  - this won't work as Number does not have add method
         List<Number> nums = new ArrayList<>();
@@ -23,16 +22,16 @@ public class Test {
         List<Object> anyNum = Arrays.<Object>asList(2.50, "four", 87, 0.585);
         nums.addAll(ints);
         nums.addAll(dbls);
-        Collections.copy(anyNum, nums); // <T> void copy(List<? super T> dest, List<? extends T> src)
+        //Collections.copy(anyNum, nums); // <T> void copy(List<? super T> dest, List<? extends T> src)
+        copyFromTo(anyNum, nums);
         for (Number eachNum : nums) {
             System.out.println(eachNum);
         }
     }
     
-   
-    
-    
-
-
-
+    public static <T> void copyFromTo(List<? super T> dst, List<? extends T> src){
+        for (int i = 0; i < src.size(); i++) {
+        dst.set(i, src.get(i));
+        }
+    }
 }
