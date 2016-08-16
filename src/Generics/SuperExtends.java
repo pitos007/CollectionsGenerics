@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author UPatryk
  */
-public class Copy {
+public class SuperExtends {
     public static void main(String[] args) {
         //List<Number> nums = Arrays.asList(1, 2);  - this won't work as Number does not have add method
         List<Number> nums = new ArrayList<>();
@@ -29,6 +29,9 @@ public class Copy {
         }
     }
     
+    // use a super wildcard when you only put values into a structure
+    // use an extends wildcard when you only get values out of a structure
+    // don't use a wildcard when you both get and put
     public static <T> void copyFromTo(List<? super T> dst, List<? extends T> src){
         for (int i = 0; i < src.size(); i++) {
         dst.set(i, src.get(i));
