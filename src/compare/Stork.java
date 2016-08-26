@@ -33,5 +33,4 @@ public class Stork implements Comparable {
     public int compareTo(Stork s){
         return this.weight < s.weight ? -1 : this.weight == s.weight ? 0 : 1;
     }
-    
 }
