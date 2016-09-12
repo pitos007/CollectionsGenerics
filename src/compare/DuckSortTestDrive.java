@@ -81,16 +81,16 @@ System.out.println(storkList.getClass() == pigeons2List.getClass());
 System.out.println("----------------------------------"); 
                  
 Sparrow[] sparrows = {  
-    new Sparrow("Daffy sparrow", 8),  
     new Sparrow("Dewey sparrow", 2), 
     new Sparrow("Howard sparrow", 7), 
     new Sparrow("Louie sparrow", 2), 
     new Sparrow("Donald sparrow", 10),  
-    new Sparrow("Huey sparrow", 2), 
-    new Sparrow("Huey sparrow", 4), 
+    new Sparrow("Huey sparrow", 2),  
     new Sparrow("Huey sparrow", 1), 
     new Sparrow("Huey sparrow", 8), 
-    new Sparrow("Huey sparrow", 3) 
+    new Sparrow("Huey sparrow", 3),
+    new Sparrow("Daffy sparrow", 8),
+    new Sparrow("Huey sparrow", 4)
  }; 
                 
 List<Sparrow> sparrowList = Arrays.asList(sparrows); 
@@ -101,16 +101,47 @@ displaySparrow(sparrowList);
 Collections.sort(sparrowList, new Comparator<Sparrow>() {   
     @Override 
     public int compare(Sparrow obj1, Sparrow obj2) { 
-        return obj1.name.compareTo(obj2.name); 
-        //return (obj1.weight < obj2.weight) ? -1: (obj1.weight > obj2.weight) ? 1 : 0; 
+        //return obj1.name.compareTo(obj2.name); 
+        //return (obj1.weight > obj2.weight) ? -1: (obj1.weight < obj2.weight) ? 1 : 0;
+        return obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1;
     } 
 }); 
+
+    // java 1.8 using lambda
+    Collections.sort(sparrowList, (Sparrow obj1, Sparrow obj2) -> obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1); 
  
+    
     System.out.println("\nAfter sorting:"); 
     displaySparrow(sparrowList); 
       
     System.out.println("");
-    System.out.println();
+    
+    System.out.println("----------------------------------");
+    
+    Nightingale[] nightingale = {  
+    new Nightingale("Dewey nightingale", 2), 
+    new Nightingale("Huey nightingale", 8), 
+    new Nightingale("Howard nightingale", 7), 
+    new Nightingale("Bob nightingale", 21), 
+    new Nightingale("Donald nightingale", 10),  
+    new Nightingale("Huey nightingale", 2),  
+    new Nightingale("Huey nightingale", 12), 
+    new Nightingale("Huey nightingale", 4),
+    new Nightingale("Huey nightingale", 3),
+    new Nightingale("Daffy nightingale", 7),
+    new Nightingale("Louie nightingale", 2)
+    
+ }; 
+                
+List<Nightingale> nightingaleList = Arrays.asList(nightingale);
+ 
+System.out.println("Before sorting:"); 
+displaySparrow(sparrowList);
+
+//To Do
+
+System.out.println("Before sorting:"); 
+displaySparrow(sparrowList);
                  
 } 
  
@@ -135,6 +166,12 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
     public static void displaySparrow(List<Sparrow> sparrows) { 
         for (Sparrow eachSparrow : sparrows) { 
             System.out.println(eachSparrow); 
+        } 
+    } 
+    
+    public static void displayNightiangale(List<Nightingale> nightingale) { 
+        for (Nightingale eachNightingale : nightingale) { 
+            System.out.println(nightingale); 
         } 
     } 
     
