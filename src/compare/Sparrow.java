@@ -36,4 +36,15 @@ public class Sparrow implements Comparator<Sparrow> {
         // 2. zero – o1 equals to o2 
         // 3. negative – o1 is less than o1 
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+    
+    
+    
 } 

@@ -1,8 +1,10 @@
 package compare;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import static java.util.Comparator.comparing;
 import java.util.List;
 
 public class DuckSortTestDrive { 
@@ -97,7 +99,8 @@ List<Sparrow> sparrowList = Arrays.asList(sparrows);
  
 System.out.println("Before sorting:"); 
 displaySparrow(sparrowList); 
- 
+
+// java 1.6 using compare - custom order
 Collections.sort(sparrowList, new Comparator<Sparrow>() {   
     @Override 
     public int compare(Sparrow obj1, Sparrow obj2) { 
@@ -107,12 +110,27 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
     } 
 }); 
 
-    // java 1.8 using lambda
-    Collections.sort(sparrowList, (Sparrow obj1, Sparrow obj2) -> obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1); 
- 
+    System.out.println("\nAfter inner class sorting - custom order (Comparator<Object>):"); 
+    displaySparrow(sparrowList);
     
-    System.out.println("\nAfter sorting:"); 
-    displaySparrow(sparrowList); 
+    List<Sparrow> sparrowList2 = new ArrayList<>(sparrowList);
+    sparrowList2.add(new Sparrow("Pawel sparrow", 3));
+
+    // java 1.8 using lambda - custom order
+    Collections.sort(sparrowList2, (Sparrow obj1, Sparrow obj2) -> obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1); 
+    
+    System.out.println("\nAfter lambda sorting - custom order (Comparator<Object>):"); 
+    displaySparrow(sparrowList2);
+    
+    List<Sparrow> sparrowList3 = new ArrayList<>(sparrowList2);
+    sparrowList3.add(new Sparrow("Gawel sparrow", 6));
+    
+    // java 1.8 using method reference - natural order
+    sparrowList3.sort(comparing(Sparrow::getWeight));
+    
+    System.out.println("\nAfter method reference sorting - natural order:"); 
+    displaySparrow(sparrowList3);
+    
       
     System.out.println("");
     
@@ -135,13 +153,13 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
                 
 List<Nightingale> nightingaleList = Arrays.asList(nightingale);
  
-System.out.println("Before sorting:"); 
-displaySparrow(sparrowList);
+//System.out.println("Before sorting:"); 
+//displayNightiangale(nightingaleList);
 
 //To Do
 
-System.out.println("Before sorting:"); 
-displaySparrow(sparrowList);
+//System.out.println("Before sorting:"); 
+//displayNightiangale(nightingaleList);
                  
 } 
  
