@@ -98,20 +98,24 @@ List<Sparrow> sparrowList = Arrays.asList(sparrows);
 System.out.println("Before sorting:"); 
 displaySparrow(sparrowList); 
  
-Collections.sort(sparrowList, new Comparator<Sparrow>() {   
-    @Override 
-    public int compare(Sparrow obj1, Sparrow obj2) { 
-        return obj1.name.compareTo(obj2.name); 
-        //return (obj1.weight < obj2.weight) ? -1: (obj1.weight > obj2.weight) ? 1 : 0; 
-    } 
-}); 
+//Collections.sort(sparrowList, new Comparator<Sparrow>() {   
+//    @Override 
+//    public int compare(Sparrow pigeon1, Sparrow pigeon2) { 
+//        //return pigeon1.name.compareTo(pigeon2.name); 
+//        return pigeon1.weight > pigeon2.weight ? -1 : pigeon1.weight == pigeon2.weight ? 0 : 1;
+//    } 
+//}); 
+
+    Collections.sort(sparrowList, (Sparrow pigeon1, Sparrow pigeon2) -> pigeon1.weight > pigeon2.weight ? -1 : pigeon1.weight == pigeon2.weight ? 0 : 1);
+    
+    
  
-    System.out.println("\nAfter sorting:"); 
+    System.out.println("\nAfter sorting (highest to lowest):");
+    System.out.println("sorting using Collections:");
     displaySparrow(sparrowList); 
       
     System.out.println("");
     System.out.println();
-                 
 } 
  
     public static void displayDuck(Duck[] ducks) { 
@@ -136,7 +140,9 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
         for (Sparrow eachSparrow : sparrows) { 
             System.out.println(eachSparrow); 
         } 
-    } 
+    }
+    
+    
     
     
 } 
