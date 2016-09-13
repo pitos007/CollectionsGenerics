@@ -153,13 +153,22 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
                 
 List<Nightingale> nightingaleList = Arrays.asList(nightingale);
  
-//System.out.println("Before sorting:"); 
-//displayNightiangale(nightingaleList);
+System.out.println("Before sorting:"); 
+displayNightiangale(nightingaleList);
 
-//To Do
+nightingaleList.sort(new Comparator<Nightingale>(){
+    @Override
+    public int compare(Nightingale n1, Nightingale n2){
+        return n1.weight > n2.weight ? -1 : n1.weight == n2.weight ? 0 : 1;
+    }
+});
 
-//System.out.println("Before sorting:"); 
-//displayNightiangale(nightingaleList);
+// java 1.8 using lambda
+nightingaleList.sort((Nightingale n1, Nightingale n2) -> n1.weight > n2.weight ? -1 : n1.weight == n2.weight ? 0 : 1);
+
+System.out.println("");
+System.out.println("After sorting:");
+displayNightiangale(nightingaleList);
                  
 } 
  
@@ -189,7 +198,7 @@ List<Nightingale> nightingaleList = Arrays.asList(nightingale);
     
     public static void displayNightiangale(List<Nightingale> nightingale) { 
         for (Nightingale eachNightingale : nightingale) { 
-            System.out.println(nightingale); 
+            System.out.println(eachNightingale); 
         } 
     } 
     
