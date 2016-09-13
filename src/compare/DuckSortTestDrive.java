@@ -114,23 +114,46 @@ Collections.sort(sparrowList, new Comparator<Sparrow>() {
     displaySparrow(sparrowList);
     
     List<Sparrow> sparrowList2 = new ArrayList<>(sparrowList);
-    sparrowList2.add(new Sparrow("Pawel sparrow", 3));
-
-    // java 1.8 using lambda - custom order
-    Collections.sort(sparrowList2, (Sparrow obj1, Sparrow obj2) -> obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1); 
+    sparrowList2.add(new Sparrow(">>Pawel<< sparrow", 3));
     
-    System.out.println("\nAfter lambda sorting - custom order (Comparator<Object>):"); 
+    // java 1.8 using lambda with comparing - natural order
+    sparrowList2.sort(comparing((s) -> s.getWeight()));
+    
+    System.out.println("\nAfter lambda sorting using comparing() - natural order:"); 
+    displaySparrow(sparrowList2);
+    
+    // java 1.8 using lambda - custom order
+    Collections.sort(sparrowList2, (Sparrow obj1, Sparrow obj2) -> obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1);
+    
+    System.out.println("\nAfter lambda sorting using lambda - custom order:"); 
     displaySparrow(sparrowList2);
     
     List<Sparrow> sparrowList3 = new ArrayList<>(sparrowList2);
-    sparrowList3.add(new Sparrow("Gawel sparrow", 6));
+    sparrowList3.add(new Sparrow(">>Gawel<< sparrow", 6));
     
     // java 1.8 using method reference - natural order
     sparrowList3.sort(comparing(Sparrow::getWeight));
     
-    System.out.println("\nAfter method reference sorting - natural order:"); 
+    System.out.println("\nAfter method reference using comparing() - natural order:"); 
     displaySparrow(sparrowList3);
     
+    // java 1.8 using method reference - reversed order
+    sparrowList3.sort(comparing(Sparrow::getWeight).reversed());
+    
+    System.out.println("\nAfter method reference using comparing weights - reversed order");
+    displaySparrow(sparrowList3);
+    
+    // java 1.8 using method reference - reversed order and thenComparing name - natural order
+    sparrowList3.sort(comparing(Sparrow::getWeight)
+            .reversed()
+            .thenComparing(Sparrow::getName));
+    
+    
+    
+    
+    System.out.println("\nAfter method reference using comparing and thenComparing name");
+    System.out.println(" -- Daffy will appear before Huey --");
+    displaySparrow(sparrowList3);
       
     System.out.println("");
     
@@ -165,6 +188,8 @@ nightingaleList.sort(new Comparator<Nightingale>(){
 
 // java 1.8 using lambda
 nightingaleList.sort((Nightingale n1, Nightingale n2) -> n1.weight > n2.weight ? -1 : n1.weight == n2.weight ? 0 : 1);
+
+
 
 System.out.println("");
 System.out.println("After sorting:");
