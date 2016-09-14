@@ -104,7 +104,8 @@ displaySparrow(sparrowList);
 Collections.sort(sparrowList, new Comparator<Sparrow>() {   
     @Override 
     public int compare(Sparrow obj1, Sparrow obj2) { 
-        //return obj1.name.compareTo(obj2.name); 
+        //return obj1.name.compareTo(obj2.name);
+        //return Integer.compare(obj1.getWeight(), obj2.getWeight());
         //return (obj1.weight > obj2.weight) ? -1: (obj1.weight < obj2.weight) ? 1 : 0;
         return obj1.weight > obj2.weight ? -1 : obj1.weight == obj2.weight ? 0 : 1;
     } 
