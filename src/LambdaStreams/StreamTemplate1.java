@@ -58,12 +58,18 @@ public class StreamTemplate1 {
       
       System.out.println("\nList adult males:");
       List<String> maleAdult = personList.stream()
-              .filter(p -> p.getAge() >= 18)
-              .filter(p -> p.getSex().equals("male"))
-              .map(Person::getName)
-              .collect(toList());
+              .filter(p -> p.getAge() >= 18)  // Stream<T> filter(Predicate<? super T> predicate);
+              .filter(p -> p.getSex().equals("male")) 
+              .map(Person::getName) // <R> Stream<R> map(Function<? super T, ? extends R> mapper);
+              .collect(toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
       maleAdult.forEach(System.out::println);
-               
+      
+      
+      System.out.println("\nList max character and check:");
+      
+              
+       
+      
       
       
    }
