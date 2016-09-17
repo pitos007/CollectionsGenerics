@@ -32,6 +32,7 @@ public class StreamTemplate1 {
           new Person("Jola", 70, "female"),
           new Person("Ala", 5, "female"));
       
+      // lambda
       personList.forEach(person ->{
           if(person.getAge() >= 18){
               System.out.println(person.getName() + " is an adult");
@@ -45,7 +46,7 @@ public class StreamTemplate1 {
           
       });
       
-      
+      // Stream
       System.out.println("\nstream option 1:");
       List<String> strList = personList.stream()
                .map(p -> 
