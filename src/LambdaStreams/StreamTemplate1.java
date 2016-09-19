@@ -108,22 +108,29 @@ public class StreamTemplate1 {
            System.out.println("There is at least one adult");
        }
       
-       
+       System.out.println("\nreduce with initial value:");
        int ageSum = personList.stream()
            .map(Person::getAge)
            .reduce(0, Integer::sum);
            //.reduce(0, (a, b) -> a + b);
         System.out.println(ageSum);
         
-       
+        
+       System.out.println("\nreduce without ininital value:");
         Optional<Integer> sum = personList.stream()
                 .map(Person::getAge)
                 .reduce((a,b) -> (a+b));
                 //.reduce(Integer::sum);
         System.out.println(sum);
-       
-      
-      
+        
+        
+        System.out.println("\nreduce using max:");
+        Optional<Integer> maxNum = personList.stream()
+                .map(Person::getAge)
+                .reduce(Integer::max);
+        System.out.println("maximum age in the list is " + maxNum);
+        
+        
       
    }
    
