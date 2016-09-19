@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
@@ -65,10 +67,60 @@ public class StreamTemplate1 {
               .collect(toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
       maleAdult.forEach(System.out::println);
       
+       
       
-      System.out.println("\nList max character and check:");
+      
       
               
+      System.out.println("");
+      List<String> nameL = new ArrayList<>();
+       for (Person per : personList) {
+           int i = per.getName().length();
+           if (i > 5) {
+               String nStr = per.getName() + " is too long";
+               nameL.add(nStr);
+           }
+           else{
+               nameL.add(per.getName());
+           }
+       }
+       for (String string : nameL) {
+           System.out.println(string);
+       }
+              
+       System.out.println("\nToo long name:");
+       
+       
+       // add stream from above...
+       
+       
+       System.out.println("\nfindAny, ifPresent:");
+       personList.stream()
+               .filter(Person::isAdult)
+               // findAny returns Optional<Person>
+               .findAny()
+               // ifPresent returns true if Optional contains a value, false otherwise
+               .ifPresent(p -> System.out.println("first occurance :" + p.getName()));
+       
+       
+       System.out.println("\nanyMatch");
+       if(personList.stream().anyMatch(Person::isAdult)){
+           System.out.println("There is at least one adult");
+       }
+      
+       
+       int ageSum = personList.stream()
+           .map(Person::getAge)
+           .reduce(0, Integer::sum);
+           //.reduce(0, (a, b) -> a + b);
+        System.out.println(ageSum);
+        
+       
+        Optional<Integer> sum = personList.stream()
+                .map(Person::getAge)
+                .reduce((a,b) -> (a+b));
+                //.reduce(Integer::sum);
+        System.out.println(sum);
        
       
       
@@ -105,7 +157,13 @@ public class StreamTemplate1 {
         public String toString() {
             return "Person{" + "name=" + name + ", age=" + age + ", sex=" + sex + '}';
         }
+        
+        public boolean isAdult(){
+            return getAge() >= 18;
+        }
    }
+   
+   
    
    interface PersonPredicate{
        public boolean test(Person p);
