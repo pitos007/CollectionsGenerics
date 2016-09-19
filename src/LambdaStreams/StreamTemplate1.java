@@ -7,12 +7,11 @@ package LambdaStreams;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
+import static java.util.Comparator.comparing;
 
 
 /**
@@ -24,15 +23,15 @@ import static java.util.stream.Collectors.toList;
 public class StreamTemplate1 {
    public static void main(String[] args) {
       List<Person> personList = Arrays.asList(
-          new Person("Patryk", 34, "male"),
-          new Person("Iwona", 34, "female"),
-          new Person("Oliwia", 1, "female"),
-          new Person("Pawel", 21, "male"),
-          new Person("Gawel", 23, "male"),
-          new Person("Bolek", 12, "male"),
-          new Person("Lolek", 12, "male"),
-          new Person("Jola", 70, "female"),
-          new Person("Ala", 5, "female"));
+          new Person(2009, "Patryk", 34, "male", "London"),
+          new Person(2008, "Iwona", 34, "female", "New York"),
+          new Person(2008, "Oliwia", 1, "female", "Cambridge"),
+          new Person(2013, "Pawel", 21, "male", "Oxford"),
+          new Person(2016, "Gawel", 23, "male", "St Ives"),
+          new Person(2009, "Bolek", 12, "male", "London"),
+          new Person(2012, "Lolek", 12, "male", "Cambridge"),
+          new Person(2012, "Jola", 70, "female", "Southampton"),
+          new Person(2011, "Ala", 5, "female", "Northampton"));
       
       // lambda
       personList.forEach(person ->{
@@ -72,7 +71,7 @@ public class StreamTemplate1 {
       
       
               
-      System.out.println("");
+      System.out.println("\nToo lon name Java 1.7");
       List<String> nameL = new ArrayList<>();
        for (Person per : personList) {
            int i = per.getName().length();
@@ -88,10 +87,14 @@ public class StreamTemplate1 {
            System.out.println(string);
        }
               
-       System.out.println("\nToo long name:");
+       System.out.println("\nToo long name Java 1.8:");
+       List<String> nameL2 = personList.stream()
+               .map(Person::getName)
+               .map(n -> n.length() > 5 ? n + " is too long" : n)
+               .collect(toList());
+       nameL2.stream()
+               .forEach(System.out::println);
        
-       
-       // add stream from above...
        
        
        System.out.println("\nfindAny, ifPresent:");
@@ -110,6 +113,7 @@ public class StreamTemplate1 {
       
        System.out.println("\nreduce with initial value:");
        int ageSum = personList.stream()
+           .filter(p -> p.sex.equals("male"))
            .map(Person::getAge)
            .reduce(0, Integer::sum);
            //.reduce(0, (a, b) -> a + b);
@@ -118,10 +122,18 @@ public class StreamTemplate1 {
         
        System.out.println("\nreduce without ininital value:");
         Optional<Integer> sum = personList.stream()
+                .filter(p -> p.sex.equals("male"))
                 .map(Person::getAge)
                 .reduce((a,b) -> (a+b));
                 //.reduce(Integer::sum);
         System.out.println(sum);
+        
+        System.out.println("\nmapToInt + sum:");
+        int maleSumAge = personList.stream()
+                .filter(p -> p.sex.equals("male"))
+                .mapToInt(Person::getAge)
+                .sum();
+        System.out.println("male sum age is " + maleSumAge);
         
         
         System.out.println("\nreduce using max:");
@@ -130,7 +142,20 @@ public class StreamTemplate1 {
                 .reduce(Integer::max);
         System.out.println("maximum age in the list is " + maxNum);
         
+        System.out.println("\nmax:");
+        Optional<Person> youngestPerson = personList.stream()
+                .min(comparing(Person::getAge));
+        System.out.println("the youngest person is " + youngestPerson);
         
+        
+        System.out.println("\nsorted example");
+        List<Person> trans11 = personList.stream()
+            .filter(t -> t.getAge() >= 18 )
+            .sorted(comparing(Person::getAge))
+            //.sorted((v1,v2) -> Integer.compare(v1.getAge(), v2.getAge()))
+            .collect(toList());
+        trans11.stream()
+            .forEach(e -> System.out.println(e));
       
    }
    
@@ -141,11 +166,15 @@ public class StreamTemplate1 {
        String name;
        int age;
        String sex;
+       String town;
+       int year;
 
-        public Person(String name, int age, String sex) {
+        public Person(int id, String name, int age, String sex, String town) {
             this.name = name;
             this.age = age;
             this.sex = sex;
+            this.town = town;
+            this.year = id;
         }
 
         public String getName() {
@@ -160,9 +189,19 @@ public class StreamTemplate1 {
             return sex;
         }
 
+        public String getTown() {
+            return town;
+        }
+
+        public int getId() {
+            return year;
+        }
+        
+        
+
         @Override
         public String toString() {
-            return "Person{" + "name=" + name + ", age=" + age + ", sex=" + sex + '}';
+            return "Person{" + "name: " + name + ", age: " + age + ", sex: " + sex + '}';
         }
         
         public boolean isAdult(){

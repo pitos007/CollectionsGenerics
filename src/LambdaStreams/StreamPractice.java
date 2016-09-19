@@ -7,6 +7,7 @@ package LambdaStreams;
 
 import java.util.Arrays;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -31,7 +32,12 @@ new Transaction(alan, 2012, 950)
 
 List<Transaction> trans11 = transactions.stream()
         .filter(t -> t.getYear() == 2011)
-        .sorted(t -> r);
+        .sorted((v1,v2) -> Integer.compare(v1.getValue(), v2.getValue()))
+        .collect(toList());
+trans11.stream()
+        .forEach(e -> System.out.println(e));
+        
+
         
       
   }
