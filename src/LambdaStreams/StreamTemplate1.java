@@ -12,6 +12,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static java.util.Comparator.comparing;
+import java.util.Map;
+import java.util.OptionalInt;
+import static java.util.stream.Collectors.groupingBy;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 /**
@@ -22,16 +27,23 @@ import static java.util.Comparator.comparing;
 
 public class StreamTemplate1 {
    public static void main(String[] args) {
+      
+      Club c1 = new Club("RunningMushrooms", 100, 10000.00, "running");
+      Club c2 = new Club("HeavyRiders", 200, 8000.00, "cycling");
+      Club c3 = new Club("FastSwimmers", 100, 9000.00, "swimming");
+      Club c4 = new Club("RunningMonkeys", 50, 8000.00, "running");
+      Club c5 = new Club("SlowRiders", 60, 5000.00, "cycling");
+      
       List<Person> personList = Arrays.asList(
-          new Person(2009, "Patryk", 34, "male", "London"),
-          new Person(2008, "Iwona", 34, "female", "New York"),
-          new Person(2008, "Oliwia", 1, "female", "Cambridge"),
-          new Person(2013, "Pawel", 21, "male", "Oxford"),
-          new Person(2016, "Gawel", 23, "male", "St Ives"),
-          new Person(2009, "Bolek", 12, "male", "London"),
-          new Person(2012, "Lolek", 12, "male", "Cambridge"),
-          new Person(2012, "Jola", 70, "female", "Southampton"),
-          new Person(2011, "Ala", 5, "female", "Northampton"));
+          new Person(2009, "Patryk", 34, "male", "London",c1),
+          new Person(2008, "Iwona", 34, "female", "New York",c2),
+          new Person(2008, "Oliwia", 1, "female", "Cambridge",c3),
+          new Person(2013, "Pawel", 21, "male", "Oxford",c4),
+          new Person(2016, "Gawel", 23, "male", "St Ives",c5),
+          new Person(2009, "Bolek", 12, "male", "London",c1),
+          new Person(2012, "Lolek", 12, "male", "Cambridge",c2),
+          new Person(2012, "Jola", 70, "female", "Southampton",c1),
+          new Person(2011, "Ala", 5, "female", "Northampton",c3));
       
       // lambda
       personList.forEach(person ->{
@@ -135,6 +147,16 @@ public class StreamTemplate1 {
                 .sum();
         System.out.println("male sum age is " + maleSumAge);
         
+        System.out.println("Arrays.stream():");
+        int[] numbers = {1,2,3,4,5,6,7,8,9};
+        int sumOfNum = Arrays.stream(numbers).sum();
+   
+        
+        //int stream to integer stream
+        IntStream intStream = personList.stream()
+                .mapToInt(Person::getAge);
+        Stream<Integer> streamInteger = intStream.boxed();
+        
         
         System.out.println("\nreduce using max:");
         Optional<Integer> maxNum = personList.stream()
@@ -143,9 +165,15 @@ public class StreamTemplate1 {
         System.out.println("maximum age in the list is " + maxNum);
         
         System.out.println("\nmax:");
-        Optional<Person> youngestPerson = personList.stream()
-                .min(comparing(Person::getAge));
-        System.out.println("the youngest person is " + youngestPerson);
+        Optional<Person> oldestPerson = personList.stream()
+                .max(comparing(Person::getAge));
+        System.out.println("the oldest person is " + oldestPerson);
+        
+        OptionalInt maxAgeOpt = personList.stream()
+                .mapToInt(Person::getAge)
+                .max();
+        int maxAgeInt = maxAgeOpt.orElse(1); // default is 1 if there is no value
+        System.out.println("The oldest person is " + maxAgeInt + " years old");
         
         
         System.out.println("\nsorted example");
@@ -156,6 +184,21 @@ public class StreamTemplate1 {
             .collect(toList());
         trans11.stream()
             .forEach(e -> System.out.println(e));
+        
+        System.out.println("\niterate example:");
+        Stream<Long> subnetMask = Stream.iterate(1L, m -> m * 2)
+                .limit(9);
+        subnetMask.forEach(System.out::println);
+        
+        System.out.println("\ngenerate example:");
+        Stream<Double> doubles = Stream.generate(Math::random)
+                .limit(5);
+        doubles.forEach(System.out::println);
+        
+        System.out.println("map example:");
+//        Map<Club, List<Person>> personsByClubs = personList.stream()
+//                .collect(groupingBy(Person::getName));
+                
       
    }
    
@@ -168,13 +211,15 @@ public class StreamTemplate1 {
        String sex;
        String town;
        int year;
+       Club club;
 
-        public Person(int id, String name, int age, String sex, String town) {
+        public Person(int id, String name, int age, String sex, String town, Club club) {
             this.name = name;
             this.age = age;
             this.sex = sex;
             this.town = town;
             this.year = id;
+            this.club = club;
         }
 
         public String getName() {
@@ -207,6 +252,68 @@ public class StreamTemplate1 {
         public boolean isAdult(){
             return getAge() >= 18;
         }
+   }
+   
+   public static class Club {
+       String name;
+       private int numMembers;
+       private double budget;
+       String type;
+
+        public Club(String name, int numMembers, double budget, String type) {
+            this.name = name;
+            this.numMembers = numMembers;
+            this.budget = budget;
+            this.type = type;
+        }
+       
+       
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getNumMembers() {
+            return numMembers;
+        }
+
+        public void setNumMembers(int numMembers) {
+            this.numMembers = numMembers;
+        }
+
+        public double getBudget() {
+            return budget;
+        }
+
+        public void setBudget(double budget) {
+            this.budget = budget;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return "Club{" + "name=" + name + ", numMembers=" + numMembers + ", budget=" + budget + ", type=" + type + '}';
+        }
+       
+       
+       
+
+        
+       
+       
+       
+       
    }
    
    
