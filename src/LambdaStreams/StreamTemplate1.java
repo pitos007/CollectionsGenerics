@@ -7,6 +7,7 @@ package LambdaStreams;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,7 +15,9 @@ import static java.util.stream.Collectors.toList;
 import static java.util.Comparator.comparing;
 import java.util.Map;
 import java.util.OptionalInt;
+import java.util.stream.Collector;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.maxBy;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -75,7 +78,7 @@ public class StreamTemplate1 {
               .filter(p -> p.getAge() >= 18)  // Stream<T> filter(Predicate<? super T> predicate);
               .filter(p -> p.getSex().equals("male")) 
               .map(Person::getName) // <R> Stream<R> map(Function<? super T, ? extends R> mapper);
-              .collect(toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
+              .collect(Collectors.toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
       maleAdult.forEach(System.out::println);
       
        
@@ -103,7 +106,7 @@ public class StreamTemplate1 {
        List<String> nameL2 = personList.stream()
                .map(Person::getName)
                .map(n -> n.length() > 5 ? n + " is too long" : n)
-               .collect(toList());
+               .collect(Collectors.toList());
        nameL2.stream()
                .forEach(System.out::println);
        
@@ -164,11 +167,27 @@ public class StreamTemplate1 {
                 .reduce(Integer::max);
         System.out.println("maximum age in the list is " + maxNum);
         
+        
         System.out.println("\nmax:");
         Optional<Person> oldestPerson = personList.stream()
                 .max(comparing(Person::getAge));
         System.out.println("the oldest person is " + oldestPerson);
         
+        
+        System.out.println("\ncomparing, maxBy:");
+        Optional<Person> oldestPersn = personList.stream()
+                .collect(maxBy(comparing(Person::getAge)));
+        System.out.println("The oldest person is " + oldestPersn);
+        
+        
+        System.out.println("\ncomparingInt, maxBy:");
+        Comparator<Person> ageComparator = Comparator.comparingInt(Person::getAge);
+        Optional<Person> oldestPrsn = personList.stream()
+                .collect(maxBy(ageComparator));
+        System.out.println("The oldest person is " + oldestPrsn);
+        
+        
+        System.out.println("\norElse:");
         OptionalInt maxAgeOpt = personList.stream()
                 .mapToInt(Person::getAge)
                 .max();
@@ -176,12 +195,23 @@ public class StreamTemplate1 {
         System.out.println("The oldest person is " + maxAgeInt + " years old");
         
         
+        
+        System.out.println("counting:");
+        long pplN1 = personList.stream()
+                .collect(Collectors.counting());
+        long pplN2 = personList.stream()
+                .count();
+        System.out.println("Number of people: " + pplN1 + " " + pplN2);
+        
+        
+        
+        
         System.out.println("\nsorted example");
         List<Person> trans11 = personList.stream()
             .filter(t -> t.getAge() >= 18 )
             .sorted(comparing(Person::getAge))
             //.sorted((v1,v2) -> Integer.compare(v1.getAge(), v2.getAge()))
-            .collect(toList());
+            .collect(Collectors.toList());
         trans11.stream()
             .forEach(e -> System.out.println(e));
         
@@ -195,9 +225,11 @@ public class StreamTemplate1 {
                 .limit(5);
         doubles.forEach(System.out::println);
         
+        
+        
         System.out.println("map example:");
 //        Map<Club, List<Person>> personsByClubs = personList.stream()
-//                .collect(groupingBy(Person::getName));
+//                .collect(Collectors.groupingBy(Club::getName, Collectors.toList()));
                 
       
    }
