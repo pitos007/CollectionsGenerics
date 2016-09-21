@@ -13,7 +13,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author UPatryk
  */
-public class StreamPractice {
+public class SportClub {
     public static void main(String... aArguments) { 
       
       Trader raoul = new Trader("Raoul", "Cambridge");

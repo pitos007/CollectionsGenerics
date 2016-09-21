@@ -5,22 +5,15 @@
  */
 package LambdaStreams;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toList;
+import java.util.*;
 import static java.util.Comparator.comparing;
-import java.util.Map;
-import java.util.OptionalInt;
-import java.util.stream.Collector;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
+import java.util.stream.Collectors;
+import static java.util.stream.Collectors.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
+import java.util.function.*;
+import java.util.stream.IntStream;
+import static java.util.stream.Collector.Characteristics.*;
 
 /**
  *
@@ -62,6 +55,8 @@ public class StreamTemplate1 {
           
       });
       
+      
+      
       // Stream
       System.out.println("\nstream option 1:");
       List<String> strList = personList.stream()
@@ -73,6 +68,7 @@ public class StreamTemplate1 {
       strList.forEach(System.out::println);
       
       
+      
       System.out.println("\nList adult males:");
       List<String> maleAdult = personList.stream()
               .filter(p -> p.getAge() >= 18)  // Stream<T> filter(Predicate<? super T> predicate);
@@ -82,8 +78,6 @@ public class StreamTemplate1 {
       maleAdult.forEach(System.out::println);
       
        
-      
-      
       
               
       System.out.println("\nToo lon name Java 1.7");
@@ -101,7 +95,9 @@ public class StreamTemplate1 {
        for (String string : nameL) {
            System.out.println(string);
        }
-              
+       
+       
+       
        System.out.println("\nToo long name Java 1.8:");
        List<String> nameL2 = personList.stream()
                .map(Person::getName)
@@ -121,27 +117,60 @@ public class StreamTemplate1 {
                .ifPresent(p -> System.out.println("first occurance :" + p.getName()));
        
        
+       
        System.out.println("\nanyMatch");
        if(personList.stream().anyMatch(Person::isAdult)){
            System.out.println("There is at least one adult");
        }
       
+       
+       
        System.out.println("\nreduce with initial value:");
-       int ageSum = personList.stream()
+       int maleAgeSum1 = personList.stream()
            .filter(p -> p.sex.equals("male"))
            .map(Person::getAge)
            .reduce(0, Integer::sum);
            //.reduce(0, (a, b) -> a + b);
-        System.out.println(ageSum);
+        System.out.println("Total male age is " + maleAgeSum1);
         
         
-       System.out.println("\nreduce without ininital value:");
-        Optional<Integer> sum = personList.stream()
+        
+        System.out.println("\nreduce without ininital value:");
+        Optional<Integer> maleAgeSum2 = personList.stream()
                 .filter(p -> p.sex.equals("male"))
                 .map(Person::getAge)
                 .reduce((a,b) -> (a+b));
-                //.reduce(Integer::sum);
-        System.out.println(sum);
+                //.reduce(Integer::maleAgeSum2);
+        System.out.println("Total male age is " + maleAgeSum2);
+        
+        
+        
+        System.out.println("\nreduce using reducing(identity, mapper, binaryOp):");
+        int maleAgeSum3 = personList.stream()
+                .filter(p -> p.sex.equals("male"))
+                .collect(reducing(0, Person::getAge, (Integer i, Integer j) -> i + j));
+        System.out.println("Total male age is " + maleAgeSum3);
+        
+        
+        
+        System.out.println("\nreduce using reducing(identity, mapper, Integer::sum):");
+        int maleAgeSum5 = personList.stream()
+                .filter(p -> p.sex.equals("male"))
+                .collect(reducing(0, Person::getAge, Integer::sum));
+        System.out.println("Total male age is " + maleAgeSum5);
+        
+        
+        //add...
+        // menu.stream().map(Dish::getCalories).reduce(Integer::sum).get();
+        // menu.stream().mapToInt(Dish::getCalories).sum();
+        
+        
+        System.out.println("\nreduce using one-argument reducing factory method:");
+        Optional<Person> maleAgeSum4 = personList.stream()
+                .collect(reducing((d1,d2) -> d1.getAge() > d2.getAge() ? d1 : d2));
+        System.out.println("Total male age is " + maleAgeSum4);
+        
+        
         
         System.out.println("\nmapToInt + sum:");
         int maleSumAge = personList.stream()
@@ -150,15 +179,19 @@ public class StreamTemplate1 {
                 .sum();
         System.out.println("male sum age is " + maleSumAge);
         
+        
+        
         System.out.println("Arrays.stream():");
         int[] numbers = {1,2,3,4,5,6,7,8,9};
         int sumOfNum = Arrays.stream(numbers).sum();
    
         
+        
         //int stream to integer stream
         IntStream intStream = personList.stream()
                 .mapToInt(Person::getAge);
         Stream<Integer> streamInteger = intStream.boxed();
+        
         
         
         System.out.println("\nreduce using max:");
@@ -168,10 +201,12 @@ public class StreamTemplate1 {
         System.out.println("maximum age in the list is " + maxNum);
         
         
+        
         System.out.println("\nmax:");
         Optional<Person> oldestPerson = personList.stream()
                 .max(comparing(Person::getAge));
         System.out.println("the oldest person is " + oldestPerson);
+        
         
         
         System.out.println("\ncomparing, maxBy:");
@@ -180,11 +215,13 @@ public class StreamTemplate1 {
         System.out.println("The oldest person is " + oldestPersn);
         
         
+        
         System.out.println("\ncomparingInt, maxBy:");
         Comparator<Person> ageComparator = Comparator.comparingInt(Person::getAge);
         Optional<Person> oldestPrsn = personList.stream()
                 .collect(maxBy(ageComparator));
         System.out.println("The oldest person is " + oldestPrsn);
+        
         
         
         System.out.println("\norElse:");
@@ -205,6 +242,19 @@ public class StreamTemplate1 {
         
         
         
+        System.out.println("summing:");
+        int totalNumOfYears = personList.stream()
+                .collect(summingInt(Person::getAge));
+        System.out.println("\nTotal number of years: " + totalNumOfYears);
+        
+        
+        
+        System.out.println("\nIntSummaryStatistics for age:");
+        IntSummaryStatistics iss = personList.stream()
+                .collect(summarizingInt(Person::getAge));
+        System.out.println(iss);
+        
+        
         
         System.out.println("\nsorted example");
         List<Person> trans11 = personList.stream()
@@ -215,10 +265,14 @@ public class StreamTemplate1 {
         trans11.stream()
             .forEach(e -> System.out.println(e));
         
+        
+        
         System.out.println("\niterate example:");
         Stream<Long> subnetMask = Stream.iterate(1L, m -> m * 2)
                 .limit(9);
         subnetMask.forEach(System.out::println);
+        
+        
         
         System.out.println("\ngenerate example:");
         Stream<Double> doubles = Stream.generate(Math::random)
@@ -227,9 +281,13 @@ public class StreamTemplate1 {
         
         
         
-        System.out.println("map example:");
-//        Map<Club, List<Person>> personsByClubs = personList.stream()
-//                .collect(Collectors.groupingBy(Club::getName, Collectors.toList()));
+        System.out.println("\njoining Strings with delimeter:");
+        String allNamesC = personList.stream()
+                .map(Person::getName)
+                .collect(joining(","));
+        System.out.println(allNamesC);
+        
+        
                 
       
    }
