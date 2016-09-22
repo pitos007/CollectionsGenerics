@@ -25,20 +25,20 @@ import static java.util.Comparator.comparing;
 
 
 public class SportClub {
+   @SuppressWarnings("empty-statement")
    public static void main(String[] args) {
       
       Club c1 = new Club("RunningMushrooms", 100, 10000.00, "running");
       Club c2 = new Club("HeavyRiders", 200, 8000.00, "cycling");
       Club c3 = new Club("FastSwimmers", 100, 9000.00, "swimming");
       Club c4 = new Club("RunningMonkeys", 50, 8000.00, "running");
-      Club c5 = new Club("SlowRiders", 60, 5000.00, "cycling");
       
       List<Person> personList = Arrays.asList(
           new Person(2009, "Patryk", 34, "male", "London",c1),
           new Person(2008, "Iwona", 34, "female", "New York",c2),
           new Person(2008, "Oliwia", 1, "female", "Cambridge",c3),
           new Person(2013, "Pawel", 21, "male", "Oxford",c4),
-          new Person(2016, "Gawel", 23, "male", "St Ives",c5),
+          new Person(2016, "Gawel", 23, "male", "St Ives",c4),
           new Person(2009, "Bolek", 12, "male", "London",c1),
           new Person(2012, "Lolek", 12, "male", "Cambridge",c2),
           new Person(2012, "Jola", 70, "female", "Southampton",c1),
@@ -312,11 +312,22 @@ public class SportClub {
         Map<Club, List<Person>> groupByClub = personList.stream()
                 .collect(Collectors.groupingBy(Person::getClub));
         groupByClub.forEach((k,v) ->{
-            System.out.println(k);
+            System.out.println("\n" + k);
             v.forEach(System.out::println);
         });
         
         
+        System.out.println("\ngrouping by custom criteria:");
+        Map<String, List<Person>> groupByYear = personList.stream()
+                .collect(groupingBy(p -> {
+                    if(p.getYear() > 2015) return "new members:";
+                    else if(p.getYear() < 2009) return "senior members:";
+                    else return "normal members:";
+                }));
+        groupByYear.forEach((k,v) ->{
+            System.out.println("\n" + k);
+            v.forEach(System.out::println);
+        });
    }
    
    
