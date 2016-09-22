@@ -308,8 +308,15 @@ public class SportClub {
         System.out.println(allNamesC);
         
         
-                
-      
+        System.out.println("\ngrouping Type::method");
+        Map<Club, List<Person>> groupByClub = personList.stream()
+                .collect(Collectors.groupingBy(Person::getClub));
+        groupByClub.forEach((k,v) ->{
+            System.out.println(k);
+            v.forEach(System.out::println);
+        });
+        
+        
    }
    
    
@@ -351,6 +358,15 @@ public class SportClub {
         public int getId() {
             return year;
         }
+
+        public int getYear() {
+            return year;
+        }
+
+        public Club getClub() {
+            return club;
+        }
+        
         
         
 
