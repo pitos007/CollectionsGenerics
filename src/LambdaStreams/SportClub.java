@@ -26,25 +26,28 @@ import static java.util.Comparator.comparing;
 
 public class SportClub {
    @SuppressWarnings("empty-statement")
+   enum BudgetType { HIGH, MEDIUM, LOW}
+   
    public static void main(String[] args) {
       
-      Club c1 = new Club("RunningMushrooms", 100, 10000.00, "running");
-      Club c2 = new Club("HeavyRiders", 200, 8000.00, "cycling");
-      Club c3 = new Club("FastSwimmers", 100, 9000.00, "swimming");
-      Club c4 = new Club("RunningMonkeys", 50, 8000.00, "running");
+      Club c1 = new Club("RunningMushrooms", 100, 10000.00, Club.Type.RUN);
+      Club c2 = new Club("HeavyRiders", 200, 8000.00, Club.Type.BIKE);
+      Club c3 = new Club("FastSwimmers", 100, 9000.00, Club.Type.SWIM);
+      Club c4 = new Club("RunningMonkeys", 50, 8000.00, Club.Type.RUN);
       
       List<Person> personList = Arrays.asList(
-          new Person(2009, "Patryk", 34, "male", "London",c1),
-          new Person(2008, "Iwona", 34, "female", "New York",c2),
-          new Person(2008, "Oliwia", 1, "female", "Cambridge",c3),
-          new Person(2013, "Pawel", 21, "male", "Oxford",c4),
-          new Person(2016, "Gawel", 23, "male", "St Ives",c4),
-          new Person(2009, "Bolek", 12, "male", "London",c1),
-          new Person(2012, "Lolek", 12, "male", "Cambridge",c2),
-          new Person(2012, "Jola", 70, "female", "Southampton",c1),
-          new Person(2011, "Ala", 5, "female", "Northampton",c3));
+          new Person(2009, "Patryk", 34, Person.Sex.MALE, "London",c1),
+          new Person(2008, "Iwona", 34, Person.Sex.FEMALE, "New York",c2),
+          new Person(2008, "Oliwia", 17, Person.Sex.FEMALE, "Cambridge",c3),
+          new Person(2013, "Pawel", 21, Person.Sex.MALE, "Oxford",c4),
+          new Person(2016, "Gawel", 23, Person.Sex.MALE, "St Ives",c4),
+          new Person(2009, "Bolek", 12, Person.Sex.MALE, "London",c1),
+          new Person(2012, "Lolek", 12, Person.Sex.MALE, "Cambridge",c2),
+          new Person(2012, "Jola", 70, Person.Sex.FEMALE, "Southampton",c1),
+          new Person(2011, "Ala", 25, Person.Sex.FEMALE, "Northampton",c3));
       
       // lambda
+      System.out.println("------------------------------------");
       personList.forEach(person ->{
           if(person.getAge() >= 18){
               System.out.println(person.getName() + " is an adult");
@@ -61,6 +64,7 @@ public class SportClub {
       
       
       // Stream
+      System.out.println("------------------------------------");
       System.out.println("\nstream option 1:");
       List<String> strList = personList.stream()
                .map(p -> 
@@ -72,17 +76,19 @@ public class SportClub {
       
       
       
+      System.out.println("------------------------------------");
       System.out.println("\nList adult males:");
       List<String> maleAdult = personList.stream()
               .filter(p -> p.getAge() >= 18)  // Stream<T> filter(Predicate<? super T> predicate);
-              .filter(p -> p.getSex().equals("male")) 
+              .filter(p -> p.sex == Person.Sex.MALE) 
               .map(Person::getName) // <R> Stream<R> map(Function<? super T, ? extends R> mapper);
               .collect(Collectors.toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
       maleAdult.forEach(System.out::println);
       
        
       
-              
+      
+      System.out.println("------------------------------------");
       System.out.println("\nToo lon name Java 1.7");
       List<String> nameL = new ArrayList<>();
        for (Person per : personList) {
@@ -101,6 +107,7 @@ public class SportClub {
        
        
        
+       System.out.println("------------------------------------");
        System.out.println("\nToo long name Java 1.8:");
        List<String> nameL2 = personList.stream()
                .map(Person::getName)
@@ -111,6 +118,7 @@ public class SportClub {
        
        
        
+       System.out.println("------------------------------------");
        System.out.println("\nfindAny, ifPresent:");
        personList.stream()
                .filter(Person::isAdult)
@@ -121,6 +129,7 @@ public class SportClub {
        
        
        
+       System.out.println("------------------------------------");
        System.out.println("\nanyMatch");
        if(personList.stream().anyMatch(Person::isAdult)){
            System.out.println("There is at least one adult");
@@ -128,9 +137,10 @@ public class SportClub {
       
        
        
+       System.out.println("------------------------------------");
        System.out.println("\nsummarizing with reduce and initial value:");
        int maleAgeSum1 = personList.stream()
-           .filter(p -> p.sex.equals("male"))
+           .filter(p -> p.sex == Person.Sex.MALE)
            .map(Person::getAge)
            .reduce(0, Integer::sum);
            //.reduce(0, (a, b) -> a + b);
@@ -138,9 +148,10 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with reduce without ininital value:");
         Optional<Integer> maleAgeSum2 = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .map(Person::getAge)
                 .reduce((a,b) -> (a+b));
                 //.reduce(Integer::maleAgeSum2);
@@ -148,25 +159,28 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with reduce using reducing(identity, mapper, binaryOp):");
         int maleAgeSum3 = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .collect(reducing(0, Person::getAge, (Integer i, Integer j) -> i + j));
         System.out.println("Total male age is " + maleAgeSum3);
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with reduce using reducing(identity, mapper, Integer::sum):");
         int maleAgeSum5 = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .collect(reducing(0, Person::getAge, Integer::sum));
         System.out.println("Total male age is " + maleAgeSum5);
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with reduce and get:");
         int maleAgeSum7 = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .map(Person::getAge)
                 .reduce(Integer::sum)
                 .get();
@@ -174,23 +188,26 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with mapToInt and sum:");
         int maleAgeSum6 = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .mapToInt(Person::getAge)
                 .sum();
         System.out.println("Total male age is " + maleAgeSum6);
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsummarizing with summingInt (no auto-unboxing):");
         int totalNumOfYears = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .collect(summingInt(Person::getAge));
         System.out.println("Total male age is: " + totalNumOfYears);
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nreduce using one-argument reducing factory method:");
         Optional<Person> maleAgeSum4 = personList.stream()
                 .collect(reducing((d1,d2) -> d1.getAge() > d2.getAge() ? d1 : d2));
@@ -198,15 +215,17 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nmapToInt + sum:");
         int maleSumAge = personList.stream()
-                .filter(p -> p.sex.equals("male"))
+                .filter(p -> p.sex == Person.Sex.MALE)
                 .mapToInt(Person::getAge)
                 .sum();
         System.out.println("male sum age is " + maleSumAge);
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("Arrays.stream():");
         int[] numbers = {1,2,3,4,5,6,7,8,9};
         int sumOfNum = Arrays.stream(numbers).sum();
@@ -220,6 +239,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nreduce using max:");
         Optional<Integer> maxNum = personList.stream()
                 .map(Person::getAge)
@@ -228,6 +248,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nmax:");
         Optional<Person> oldestPerson = personList.stream()
                 .max(comparing(Person::getAge));
@@ -235,6 +256,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\ncomparing, maxBy:");
         Optional<Person> oldestPersn = personList.stream()
                 .collect(maxBy(comparing(Person::getAge)));
@@ -242,6 +264,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\ncomparingInt, maxBy:");
         Comparator<Person> ageComparator = Comparator.comparingInt(Person::getAge);
         Optional<Person> oldestPrsn = personList.stream()
@@ -250,6 +273,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\norElse:");
         OptionalInt maxAgeOpt = personList.stream()
                 .mapToInt(Person::getAge)
@@ -259,6 +283,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("counting:");
         long pplN1 = personList.stream()
                 .collect(Collectors.counting());
@@ -269,6 +294,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nIntSummaryStatistics for age:");
         IntSummaryStatistics iss = personList.stream()
                 .collect(summarizingInt(Person::getAge));
@@ -276,6 +302,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\nsorted example");
         List<Person> trans11 = personList.stream()
             .filter(t -> t.getAge() >= 18 )
@@ -287,6 +314,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\niterate example:");
         Stream<Long> subnetMask = Stream.iterate(1L, m -> m * 2)
                 .limit(9);
@@ -294,6 +322,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\ngenerate example:");
         Stream<Double> doubles = Stream.generate(Math::random)
                 .limit(5);
@@ -301,6 +330,7 @@ public class SportClub {
         
         
         
+        System.out.println("------------------------------------");
         System.out.println("\njoining Strings with delimeter:");
         String allNamesC = personList.stream()
                 .map(Person::getName)
@@ -308,15 +338,17 @@ public class SportClub {
         System.out.println(allNamesC);
         
         
+        System.out.println("------------------------------------");
         System.out.println("\ngrouping Type::method");
         Map<Club, List<Person>> groupByClub = personList.stream()
                 .collect(Collectors.groupingBy(Person::getClub));
-        groupByClub.forEach((k,v) ->{
-            System.out.println("\n" + k);
-            v.forEach(System.out::println);
+                //.collect(Collectors.groupingBy(Person::getClub, toList()));
+        groupByClub.forEach((c,p) ->{
+            System.out.println("\n" + c);
+            p.forEach(System.out::println);
         });
         
-        
+        System.out.println("------------------------------------");
         System.out.println("\ngrouping by custom criteria:");
         Map<String, List<Person>> groupByYear = personList.stream()
                 .collect(groupingBy(p -> {
@@ -328,6 +360,54 @@ public class SportClub {
             System.out.println("\n" + k);
             v.forEach(System.out::println);
         });
+        
+        System.out.println("------------------------------------");
+        System.out.println("\nmulti-level grouping by custom criteria");
+        Map<String, Map<Person.Sex, List<Person>>> groupByYearThenSex = personList.stream().collect(
+                groupingBy(p ->{
+                    if(p.getYear() > 2015) return "New members";
+                    else if(p.getYear() < 2009) return "Senior members";
+                    else return "Normal members";
+                },
+                groupingBy(Person::getSex)
+                )
+        );
+        groupByYearThenSex.forEach((String y,Map<Person.Sex, List<Person>> m) ->{
+            System.out.println("\n" + y);
+            m.forEach((Person.Sex s, List<Person> p) -> {
+                System.out.println("   " + s);
+                p.forEach((Person prsn) -> {
+                    System.out.println("      " + prsn.toString());
+                });
+                
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\nmulti-level grouping by custom criteria");
+        Map<String, Map<Person.Sex, List<Person>>> groupByYearThenSexOldest = personList.stream().collect(
+                groupingBy(p ->{
+                    if(p.getYear() > 2015) return "New members";
+                    else if(p.getYear() < 2009) return "Senior members";
+                    else return "Normal members";
+                },
+                groupingBy(Person::getSex, collectingAndThen(
+                        reducing((p1, p2) -> p1.getAge() > p2.getAge() ? p1 : p2), 
+                        Optional::get)
+                )
+            )
+        );
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\ncounting in a group");
+        Map<Club, Long> numberOfMemInGroup = personList.stream()
+                .collect(groupingBy(Person::getClub, counting()));
+        numberOfMemInGroup.forEach((clb, cnt) ->{
+            System.out.println(clb + " - " + cnt + " members");
+        });
    }
    
    
@@ -336,12 +416,14 @@ public class SportClub {
    public static class Person{
        String name;
        int age;
-       String sex;
+       Sex sex;
        String town;
        int year;
        Club club;
+       
+       
 
-        public Person(int id, String name, int age, String sex, String town, Club club) {
+        public Person(int id, String name, int age, Sex sex, String town, Club club) {
             this.name = name;
             this.age = age;
             this.sex = sex;
@@ -349,6 +431,8 @@ public class SportClub {
             this.year = id;
             this.club = club;
         }
+        
+        public enum Sex {MALE, FEMALE}
 
         public String getName() {
             return name;
@@ -358,7 +442,7 @@ public class SportClub {
             return age;
         }
 
-        public String getSex() {
+        public Sex getSex() {
             return sex;
         }
 
@@ -395,9 +479,11 @@ public class SportClub {
        String name;
        private int numMembers;
        private double budget;
-       String type;
+       Type type;
+       
+       public enum Type{SWIM, BIKE, RUN}
 
-        public Club(String name, int numMembers, double budget, String type) {
+        public Club(String name, int numMembers, double budget, Type type) {
             this.name = name;
             this.numMembers = numMembers;
             this.budget = budget;
@@ -430,11 +516,11 @@ public class SportClub {
             this.budget = budget;
         }
 
-        public String getType() {
+        public Type getType() {
             return type;
         }
 
-        public void setType(String type) {
+        public void setType(Type type) {
             this.type = type;
         }
 
