@@ -6,17 +6,12 @@
 package LambdaStreams;
 
 import java.util.*;
-import static java.util.Comparator.comparing;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.function.*;
 import java.util.stream.IntStream;
-import static java.util.stream.Collector.Characteristics.*;
 import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparing;
+import java.util.function.Function;
 
 /**
  *
@@ -348,6 +343,8 @@ public class SportClub {
             p.forEach(System.out::println);
         });
         
+        
+        
         System.out.println("------------------------------------");
         System.out.println("\ngrouping by custom criteria:");
         Map<String, List<Person>> groupByYear = personList.stream()
@@ -361,8 +358,11 @@ public class SportClub {
             v.forEach(System.out::println);
         });
         
+        
+        
+        
         System.out.println("------------------------------------");
-        System.out.println("\nmulti-level grouping by custom criteria");
+        System.out.println("\nmulti-level grouping - groupingBy()");
         Map<String, Map<Person.Sex, List<Person>>> groupByYearThenSex = personList.stream().collect(
                 groupingBy(p ->{
                     if(p.getYear() > 2015) return "New members";
@@ -386,19 +386,101 @@ public class SportClub {
         
         
         System.out.println("------------------------------------");
-        System.out.println("\nmulti-level grouping by custom criteria");
-        Map<String, Map<Person.Sex, List<Person>>> groupByYearThenSexOldest = personList.stream().collect(
+        System.out.println("\nmulti-level grouping - groupingBy() + groupingBy(reducing()) without Optional type");
+        Map<String, Map<Person.Sex, Person>> groupByYearThenSexOldest = personList.stream().collect(
                 groupingBy(p ->{
                     if(p.getYear() > 2015) return "New members";
                     else if(p.getYear() < 2009) return "Senior members";
                     else return "Normal members";
                 },
                 groupingBy(Person::getSex, collectingAndThen(
-                        reducing((p1, p2) -> p1.getAge() > p2.getAge() ? p1 : p2), 
-                        Optional::get)
+                        reducing((p1, p2) -> p1.getAge() > p2.getAge() ? p1 : p2), Optional::get)
                 )
             )
         );
+        groupByYearThenSexOldest.forEach((String y, Map<Person.Sex, Person> m) ->{
+            System.out.println("\n" + y);
+            m.forEach((Person.Sex s, Person p) -> {
+                System.out.println("   " + s);
+                System.out.println("      " + p.toString());
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\nmulti-level grouping - groupingBy(collectingAndThen(maxBy())) without Optional type");
+        Map<String, Map<Person.Sex, Person>> groupByYearThenSexOldest2 = personList.stream().collect(
+                groupingBy(p ->{
+                    if(p.getYear() > 2015) return "New members";
+                    else if(p.getYear() < 2009) return "Senior members";
+                    else return "Normal members";
+                },
+                groupingBy(Person::getSex, collectingAndThen(
+                        maxBy(Comparator.comparingInt(Person::getAge)), Optional::get)
+                )
+            )
+        );
+        groupByYearThenSexOldest2.forEach((String y, Map<Person.Sex, Person> m) ->{
+            System.out.println("\n" + y);
+            m.forEach((Person.Sex s, Person p) -> {
+                System.out.println("   " + s);
+                System.out.println("      " + p.toString());
+            });
+        });
+        
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\nmulti-level grouping - groupingBy() + groupingBy(reducing()) with Optional type");
+        Map<String, Map<Person.Sex, Optional<Person>>> groupByYearThenSexOldestOptional = personList.stream().collect(
+                groupingBy(p ->{
+                    if(p.getYear() > 2015) return "New members";
+                    else if(p.getYear() < 2009) return "Senior members";
+                    else return "Normal members";
+                },
+                groupingBy(Person::getSex,
+                        reducing((p1, p2) -> p1.getAge() > p2.getAge() ? p1 : p2)
+                )
+            )
+        );
+        groupByYearThenSexOldestOptional.forEach((String y, Map<Person.Sex, Optional<Person>> m) ->{
+            System.out.println("\n" + y);
+            m.forEach((Person.Sex s, Optional<Person> p) -> {
+                System.out.println("   " + s);
+                System.out.println("      " + p.toString());
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\nmulti-level grouping - groupingBy(collectingAndThen(maxBy())) with Optional type");
+        Map<String, Map<Person.Sex, Optional<Person>>> groupByYearThenSexOldest2Optional = personList.stream().collect(
+                groupingBy(p ->{
+                    if(p.getYear() > 2015) return "New members";
+                    else if(p.getYear() < 2009) return "Senior members";
+                    else return "Normal members";
+                },
+                groupingBy(Person::getSex,
+                        maxBy(Comparator.comparingInt(Person::getAge))
+                ))
+            );
+        groupByYearThenSexOldest2Optional.forEach((String y, Map<Person.Sex, Optional<Person>> m) ->{
+            System.out.println("\n" + y);
+            m.forEach((Person.Sex s, Optional<Person> p) -> {
+                System.out.println("   " + s);
+                System.out.println("      " + p.toString());
+            });
+        });
+        
+        
+        
+        
+        
+        
+        
         
         
         System.out.println("------------------------------------");
