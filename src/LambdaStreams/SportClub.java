@@ -11,6 +11,7 @@ import static java.util.stream.Collectors.*;
 import java.util.stream.Stream;
 import java.util.stream.IntStream;
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.comparingInt;
 import java.util.function.Function;
 
 /**
@@ -477,7 +478,26 @@ public class SportClub {
         
         
         
-        
+        System.out.println("------------------------------------");
+        System.out.println("\ngrouping by custom criteria - mapping()");
+        Map<String, Set<String>> groupByYearToSet = personList.stream().collect(
+                groupingBy(p -> {
+                    if(p.getYear() > 2015) return "new members:";
+                    else if(p.getYear() < 2009) return "senior members:";
+                    else return "normal members:";
+                },
+                mapping(
+                        prsn -> {
+                            if(prsn.getAge() > 30) return "age: >30 " + prsn.getName();
+                            else if (prsn.getAge() < 18) return "age: <18 " + prsn.getName();
+                            else return "age: 19<29 " + prsn.getName();
+                        },
+                        toCollection(HashSet::new) )));
+                        //toSet();
+        groupByYearToSet.forEach((k,v) ->{
+            System.out.println("\n" + k);
+            v.forEach(System.out::println);
+        });
         
         
         
@@ -490,10 +510,76 @@ public class SportClub {
         numberOfMemInGroup.forEach((clb, cnt) ->{
             System.out.println(clb + " - " + cnt + " members");
         });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\npartitioning ex1:");
+        Map<Boolean, List<Person>> partitionPers = personList.stream().collect(
+                partitioningBy(Person::isUnderAge));
+        partitionPers.forEach((Boolean b, List<Person> p) ->{
+            System.out.println("\nunder age?: " + b);
+            p.forEach((Person pers) ->{
+                System.out.println("   " + pers);
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\npartitioningBy ex2:");
+        Map<Boolean, List<Person>> oldestInAgeGroup = personList.stream().collect(
+            partitioningBy(p -> p.isAdult()));
+        oldestInAgeGroup.forEach((bol, persL) -> {
+            System.out.println(bol);
+            persL.forEach(pers -> {
+                System.out.println("adult?:   " + pers);
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\npartitioningBy, groupingBy");
+        Map<Boolean, Map<Integer, List<Person>>> partitionPersGroupingBy = personList.stream().collect(
+                partitioningBy(Person::isUnderAge, groupingBy(Person::getAge)));
+        
+        partitionPersGroupingBy.forEach((Boolean b, Map<Integer, List<Person>> m) ->{
+            System.out.println("\nunder age?: " + b);
+            m.forEach((Integer yi, List<Person> persLi) -> {
+                System.out.println("age group: " + yi);
+                persLi.forEach((Person pers) -> {
+                    System.out.println("   " + pers.toString());
+                });
+            });
+        });
+        
+        
+        
+        System.out.println("------------------------------------");
+        System.out.println("\npartitioningBy, collectingAndThen, maxBy");
+        Map<Boolean, Person> oldestInAgeGroup2 = personList.stream().collect(
+                partitioningBy(Person::isAdult,
+                    collectingAndThen(
+                        maxBy(comparingInt(Person::getAge)),
+                            Optional::get)));
+        oldestInAgeGroup2.forEach((Boolean b, Person p) -> {
+            System.out.println("adult?: " + b + ", Oldest in the group: " + p.toString());
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
    }
    
    
-      
+        
    
    public static class Person{
        String name;
@@ -544,6 +630,10 @@ public class SportClub {
             return club;
         }
         
+        
+        public boolean isUnderAge(){
+            return this.getAge() < 18;
+        }
         
         
 
