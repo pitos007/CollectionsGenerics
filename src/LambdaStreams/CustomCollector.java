@@ -13,6 +13,8 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import static java.util.stream.Collector.Characteristics.CONCURRENT;
+import static java.util.stream.Collector.Characteristics.IDENTITY_FINISH;
 import java.util.stream.Collectors.*;
 import static javafx.scene.input.KeyCode.*;
 
@@ -20,31 +22,39 @@ import static javafx.scene.input.KeyCode.*;
  *
  * @author UPatryk
  */
-public class CustomCollector implements Collector<T, List<T>, List<T>> {
+public class CustomCollector<T> implements Collector<T, List<T>, List<T>> {
+    
 
     @Override
     public Supplier<List<T>> supplier() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return () -> new ArrayList<T>();
+        //return ArrayList::new;
     }
 
     @Override
     public BiConsumer<List<T>, T> accumulator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (list, item) -> list.add(item);
+        //return List::add;
     }
 
     @Override
     public BinaryOperator<List<T>> combiner() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (List<T> l1, List<T> l2) -> {
+            l1.addAll(l2);
+            return l1;
+        };
     }
 
     @Override
     public Function<List<T>, List<T>> finisher() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //return Function.identity();
+        return i -> i;
     }
 
     @Override
     public Set<Characteristics> characteristics() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return Collections.unmodifiableSet(EnumSet.of(IDENTITY_FINISH, CONCURRENT));
     }
+    
     
 }
