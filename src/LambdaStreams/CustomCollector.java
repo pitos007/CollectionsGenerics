@@ -21,13 +21,14 @@ import static javafx.scene.input.KeyCode.*;
 /**
  *
  * @author UPatryk
+ * @param <T> any type
  */
 public class CustomCollector<T> implements Collector<T, List<T>, List<T>> {
     
 
     @Override
     public Supplier<List<T>> supplier() {
-        return () -> new ArrayList<T>();
+        return () -> new ArrayList<>();
         //return ArrayList::new;
     }
 
