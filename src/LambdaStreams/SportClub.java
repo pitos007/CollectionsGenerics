@@ -568,11 +568,16 @@ public class SportClub {
         });
         
         
+
         
-        
-        
-        
-        
+        System.out.println("------------------------------------");
+        System.out.println("\nprint the current stream with peek");
+        List<Double> dblL = Arrays.asList(25.50, 48.24, 74.68, 56.15, 19.20, 66.50);
+        List<Double> solL = dblL.stream()
+                .peek(n -> System.out.println("orig: " + n)).map(n -> n * 1.3)
+                .peek(d -> System.out.println("uplift: " + d)).filter(d -> d >= 26.00)
+                .peek(d -> System.out.println("higher than 26: " + d)).collect(toList());
+        // filter so it shows the highest three values
         
         
         
