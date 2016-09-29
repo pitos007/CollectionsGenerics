@@ -6,6 +6,7 @@
 package LambdaStreams;
 
 import java.util.*;
+import static java.util.Arrays.asList;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
 import java.util.stream.Stream;
@@ -81,7 +82,15 @@ public class SportClub {
               .collect(Collectors.toList());  // <R, A> R collect(Collector<? super T, A, R> collector);
       maleAdult.forEach(System.out::println);
       
-       
+      
+      
+      System.out.println("------------------------------------");
+      System.out.println("\nflatMap ex1:");
+      List<Integer> together = Stream.of(asList(14,22,30), asList(18,66,74))
+              .flatMap(n -> n.stream())
+              .collect(toList());
+      
+      
       
       
       System.out.println("------------------------------------");
