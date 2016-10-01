@@ -291,10 +291,19 @@ public class SportClub {
         System.out.println("------------------------------------");
         System.out.println("counting:");
         long pplN1 = personList.stream()
-                .collect(Collectors.counting());
+                .filter(p -> p.getAge() >= 18) // lazy method - does not produce new value and returns new stream
+                .collect(Collectors.counting()); // eager method - produces new value or void
         long pplN2 = personList.stream()
+                .filter(p -> p.getAge() >= 18)
                 .count();
-        System.out.println("Number of people: " + pplN1 + " " + pplN2);
+        System.out.println("Number of adults: " + pplN1 + " " + pplN2);
+        
+        long pplN3 = personList.stream()
+                .filter(p -> {
+                    if (p.isAdult()) {System.out.println(p.getName() + " is " + p.getAge() + " years old");}
+                    return p.getAge() >= 18;
+                })
+                .count();
         
         
         
