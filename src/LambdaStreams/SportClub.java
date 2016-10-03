@@ -254,27 +254,36 @@ public class SportClub {
         
         
         System.out.println("------------------------------------");
-        System.out.println("\nmax:");
+        System.out.println("\nmax: Optional<T>, comparing");
         Optional<Person> oldestPerson = personList.stream()
-                .max(comparing(Person::getAge));
+                .max(Comparator.comparing(Person::getAge));
         System.out.println("the oldest person is " + oldestPerson);
+        
+        
+
+        System.out.println("------------------------------------");
+        System.out.println("\nmax: comparing, get");
+        Person oldestPerson2 = personList.stream()
+                .max(Comparator.comparing(p -> p.getAge()))
+                .get(); // T value from Optional
+        System.out.println("the oldest person is " + oldestPerson2);
         
         
         
         System.out.println("------------------------------------");
         System.out.println("\ncomparing, maxBy:");
-        Optional<Person> oldestPersn = personList.stream()
-                .collect(maxBy(comparing(Person::getAge)));
-        System.out.println("The oldest person is " + oldestPersn);
+        Optional<Person> oldestPerson3 = personList.stream()
+                .collect(maxBy(Comparator.comparing(Person::getAge)));
+        System.out.println("The oldest person is " + oldestPerson3);
         
         
         
         System.out.println("------------------------------------");
         System.out.println("\ncomparingInt, maxBy:");
         Comparator<Person> ageComparator = Comparator.comparingInt(Person::getAge);
-        Optional<Person> oldestPrsn = personList.stream()
+        Optional<Person> oldestPerson4 = personList.stream()
                 .collect(maxBy(ageComparator));
-        System.out.println("The oldest person is " + oldestPrsn);
+        System.out.println("The oldest person is " + oldestPerson4);
         
         
         
@@ -320,7 +329,7 @@ public class SportClub {
         System.out.println("\nsorted example");
         List<Person> trans11 = personList.stream()
             .filter(t -> t.getAge() >= 18 )
-            .sorted(comparing(Person::getAge))
+            .sorted(Comparator.comparing(Person::getAge))
             //.sorted((v1,v2) -> Integer.compare(v1.getAge(), v2.getAge()))
             .collect(Collectors.toList());
         trans11.stream()
@@ -579,7 +588,7 @@ public class SportClub {
         Map<Boolean, Person> oldestInAgeGroup2 = personList.stream().collect(
                 partitioningBy(Person::isAdult,
                     collectingAndThen(
-                        maxBy(comparingInt(Person::getAge)),
+                        maxBy(Comparator.comparingInt(Person::getAge)),
                             Optional::get)));
         oldestInAgeGroup2.forEach((Boolean b, Person p) -> {
             System.out.println("adult?: " + b + ", Oldest in the group: " + p.toString());
