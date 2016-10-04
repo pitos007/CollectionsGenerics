@@ -9,11 +9,8 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.*;
-import java.util.stream.Stream;
 import java.util.stream.IntStream;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingInt;
-import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  *
@@ -32,16 +29,35 @@ public class SportClub {
       Club c3 = new Club("FastSwimmers", 100, 9000.00, Club.Type.SWIM);
       Club c4 = new Club("RunningMonkeys", 50, 8000.00, Club.Type.RUN);
       
+      List<Race> raceList1 = Arrays.asList(
+      new Race("race01","running",10),
+      new Race("race02","running",5),
+      new Race("race03","running",21),
+      new Race("race04","running",5));
+      
+      List<Race> raceList2 = Arrays.asList(
+      new Race("race08","cycling",50),
+      new Race("race06","cycling",100),
+      new Race("race07","cycling",160),
+      new Race("race08","cycling",200));
+      
+      List<Race> raceList3 = Arrays.asList(
+      new Race("race09","swimming",1),
+      new Race("race10","swimming",2),
+      new Race("race11","swimming",3));
+      
       List<Person> personList = Arrays.asList(
-          new Person(2009, "Patryk", 34, Person.Sex.MALE, "London",c1),
-          new Person(2008, "Iwona", 34, Person.Sex.FEMALE, "New York",c2),
-          new Person(2008, "Oliwia", 17, Person.Sex.FEMALE, "Cambridge",c3),
-          new Person(2013, "Pawel", 21, Person.Sex.MALE, "Oxford",c4),
-          new Person(2016, "Gawel", 23, Person.Sex.MALE, "St Ives",c4),
-          new Person(2009, "Bolek", 12, Person.Sex.MALE, "London",c1),
-          new Person(2012, "Lolek", 12, Person.Sex.MALE, "Cambridge",c2),
-          new Person(2012, "Jola", 70, Person.Sex.FEMALE, "Southampton",c1),
-          new Person(2011, "Ala", 25, Person.Sex.FEMALE, "Northampton",c3));
+          new Person(2009, "Patryk", 34, Person.Sex.MALE, "London",c1,raceList1),
+          new Person(2008, "Iwona", 34, Person.Sex.FEMALE, "New York",c2,raceList3),
+          new Person(2008, "Oliwia", 17, Person.Sex.FEMALE, "Cambridge",c3,raceList1),
+          new Person(2013, "Pawel", 21, Person.Sex.MALE, "Oxford",c4,raceList2),
+          new Person(2016, "Gawel", 23, Person.Sex.MALE, "St Ives",c4,raceList1),
+          new Person(2009, "Bolek", 12, Person.Sex.MALE, "London",c1,raceList3),
+          new Person(2012, "Lolek", 12, Person.Sex.MALE, "Cambridge",c2,raceList2),
+          new Person(2012, "Jola", 70, Person.Sex.FEMALE, "Southampton",c1,raceList2),
+          new Person(2011, "Ala", 25, Person.Sex.FEMALE, "Northampton",c3,raceList3));
+      
+      
       
       // lambda
       System.out.println("------------------------------------");
@@ -89,7 +105,18 @@ public class SportClub {
       List<Integer> together = Stream.of(asList(14,22,30), asList(18,66,74))
               .flatMap(n -> n.stream())
               .collect(toList());
+      together.forEach(System.out::println);
       
+      
+      System.out.println("------------------------------------");
+      System.out.println("\nflatMap ex2:");
+      Set<String> longestRaces = personList.stream()
+              .flatMap(p -> p.getRace())
+              //.filter(r -> r.getName().equals("cycling"))
+              .filter(r -> r.getLength() > 21)
+              .map(r -> r.getName() + ", " + r.getLength() + "km") // how to get length?
+              .collect(Collectors.toSet());
+      longestRaces.forEach(System.out::println);
       
       
       
@@ -161,6 +188,7 @@ public class SportClub {
                 .reduce((a,b) -> (a+b));
                 //.reduce(Integer::maleAgeSum2);
         System.out.println("Total male age is " + maleAgeSum2);
+        
         
         
         
@@ -620,16 +648,18 @@ public class SportClub {
        String town;
        int year;
        Club club;
+       List<Race> races;
        
        
 
-        public Person(int id, String name, int age, Sex sex, String town, Club club) {
+        public Person(int id, String name, int age, Sex sex, String town, Club club, List<Race> races) {
             this.name = name;
             this.age = age;
             this.sex = sex;
             this.town = town;
             this.year = id;
             this.club = club;
+            this.races = races;
         }
         
         public enum Sex {MALE, FEMALE}
@@ -666,6 +696,12 @@ public class SportClub {
         public boolean isUnderAge(){
             return this.getAge() < 18;
         }
+        
+        public Stream<Race> getRace(){
+            return this.races.stream();
+        }
+        
+       
         
         
 
@@ -732,16 +768,38 @@ public class SportClub {
         public String toString() {
             return "Club{" + "name=" + name + ", numMembers=" + numMembers + ", budget=" + budget + ", type=" + type + '}';
         }
-       
-       
-       
-
-        
-       
-       
-       
-       
    }
+   
+   
+   
+    public static class Race {
+        private String name;
+        private String type;
+        private int length;
+
+        public Race(String name, String type, int length) {
+            this.name = name;
+            this.type = type;
+            this.length = length;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        @Override
+        public String toString() {
+            return "Race{" + "name=" + name + ", type=" + type + ", length=" + length + '}';
+        }
+    }
    
    
    
