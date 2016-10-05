@@ -225,7 +225,7 @@ public class SportClub {
         System.out.println("\nsummarizing with mapToInt and sum:");
         int maleAgeSum6 = personList.stream()
                 .filter(p -> p.sex == Person.Sex.MALE)
-                .mapToInt(Person::getAge)
+                .mapToInt(Person::getAge) // returns IntStream
                 .sum();
         System.out.println("Total male age is " + maleAgeSum6);
         
