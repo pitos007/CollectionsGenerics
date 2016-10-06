@@ -321,7 +321,18 @@ public class SportClub {
                 .mapToInt(Person::getAge)
                 .max();
         int maxAgeInt = maxAgeOpt.orElse(1); // default is 1 if there is no value
+        System.out.println("Optional value: " + maxAgeOpt);
         System.out.println("The oldest person is " + maxAgeInt + " years old");
+        
+        Optional<Integer> strOpt = Optional.of(maxAgeInt);
+        System.out.println(strOpt);
+        
+        strOpt = Optional.empty();
+        System.out.println(strOpt);
+        
+        Optional strOpt2 = Optional.ofNullable(null);
+        System.out.println(strOpt2);
+        
         
         
         
