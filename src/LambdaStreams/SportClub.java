@@ -393,11 +393,12 @@ public class SportClub {
         
         
         System.out.println("------------------------------------");
-        System.out.println("\njoining Strings with delimeter:");
+        System.out.println("\njoining Strings with delimeter ex1");
         String allNamesC = personList.stream()
                 .map(Person::getName)
-                .collect(joining(","));
+                .collect(Collectors.joining(", "));
         System.out.println(allNamesC);
+        
         
         
         System.out.println("------------------------------------");
