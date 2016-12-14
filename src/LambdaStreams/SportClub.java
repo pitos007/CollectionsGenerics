@@ -261,7 +261,8 @@ public class SportClub {
         System.out.println("------------------------------------");
         System.out.println("Arrays.stream():");
         int[] numbers = {1,2,3,4,5,6,7,8,9};
-        int sumOfNum = Arrays.stream(numbers).sum();
+        int sumOfNum1 = Arrays.stream(numbers).sum();
+        int sumOfNum2 = IntStream.of(numbers).sum();
    
         
         
