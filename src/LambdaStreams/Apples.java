@@ -26,11 +26,11 @@ public class Apples{
                                               new Apple(120, "red"));  
 
  
-        List<Apple> greenApples = filterApples(inventory, Apples::isGreenApple); 
+        List<Apple> greenApples = filterApples(inventory, Apples::isGreenApple); // (apple) -> Apples.isGreenApple(apple)
         System.out.println(greenApples); 
 
          
-        List<Apple> heavyApples = filterApples(inventory, Apples::isHeavyApple); 
+        List<Apple> heavyApples = filterApples(inventory, Apples::isHeavyApple); // (apple) -> Apples.isHeavyApple(apple)
         System.out.println(heavyApples); 
 
          
@@ -49,7 +49,7 @@ public class Apples{
         List<Apple> redAndHeavyApples = filter(inventory, new AppleTester1()); // return "red".equals(apple.getColor()) && apple.getWeight()>150;
         System.out.println(redAndHeavyApples);
         
-        // old way using inner class
+        // old way using inner class instead of (Apple apple) -> apple.getColor().equals("red"
         List<Apple> redApples = filter(inventory, new ApplePredicate() { 
             @Override 
             public boolean test(Apple apple){ 
@@ -61,7 +61,8 @@ public class Apples{
     
     
     public static List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p){ 
-        List<Apple> result = new ArrayList<>(); 
+        List<Apple> result = new ArrayList<>();
+        // inventory.stream().filter((apple) -> (p.test(apple))).forEachOrdered((apple) -> {result.add(apple);});
         for(Apple apple : inventory){ 
             if(p.test(apple)){ 
                 result.add(apple); 
@@ -73,6 +74,7 @@ public class Apples{
 
     public static List<Apple> filter(List<Apple> inventory, ApplePredicate predicate){
         List<Apple> result = new ArrayList<>();
+        // inventory.stream().filter((apple) -> (predicate.test(apple))).forEachOrdered((apple) -> {result.add(apple);});
         for (Apple apple : inventory) {
             if (predicate.test(apple)) {
                 result.add(apple);
@@ -84,6 +86,7 @@ public class Apples{
 
     public static List<Apple> filterGreenApples(List<Apple> inventory){ 
         List<Apple> result = new ArrayList<>(); 
+        // inventory.stream().filter((apple) -> ("green".equals(apple.getColor()))).forEachOrdered((apple) -> {result.add(apple);}); 
         for (Apple apple: inventory){ 
             if ("green".equals(apple.getColor())) { 
                 result.add(apple); 
@@ -96,6 +99,7 @@ public class Apples{
 
     public static List<Apple> filterHeavyApples(List<Apple> inventory){ 
         List<Apple> result = new ArrayList<>(); 
+        // inventory.stream().filter((apple) -> (apple.getWeight() > 150)).forEachOrdered((apple) -> {result.add(apple);});
         for (Apple apple: inventory){ 
             if (apple.getWeight() > 150) { 
                 result.add(apple); 
