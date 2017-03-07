@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LambdaStreams;
+package predicates;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,7 +49,7 @@ public class Apples{
         List<Apple> redAndHeavyApples = filter(inventory, new AppleTester1()); // return "red".equals(apple.getColor()) && apple.getWeight()>150;
         System.out.println(redAndHeavyApples);
         
-        // old way using inner class instead of (Apple apple) -> apple.getColor().equals("red"
+        // old way using inner class instead of (Apple apple) -> apple.getColor().equals("red")
         List<Apple> redApples = filter(inventory, new ApplePredicate() { 
             @Override 
             public boolean test(Apple apple){ 
