@@ -25,7 +25,7 @@ public class Mountain {
     }
     
     public static boolean isBelow(Integer h){
-        return h < 6000;
+        return h > 6000;
     }
 }
 
